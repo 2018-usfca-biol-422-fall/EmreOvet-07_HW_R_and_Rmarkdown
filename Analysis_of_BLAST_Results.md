@@ -1,27 +1,30 @@
----
-title: "Analysis of BLAST Results"
-author: "Emre Ovet"
-date: "October 12, 2018"
-output: github_document
----
+Analysis of BLAST Results
+================
+Emre Ovet
+October 12, 2018
 
-# Introduction
+Introduction
+============
 
 Add 1-2 paragraphs here.
 
-# Methods
+Methods
+=======
 
-## Sample origin and sequencing
+Sample origin and sequencing
+----------------------------
 
 Add about a paragraph here.
 
-## Computational
+Computational
+-------------
 
 And another paragraph or two here.
 
-# Results
+Results
+=======
 
-```{r load-libraries, message = FALSE}
+``` r
 # Be sure to install these packages before running this script
 # They can be installed either with the install.packages() function
 # or with the 'Packages' pane in RStudio
@@ -33,7 +36,7 @@ library("knitr")
 library("ggplot2")
 ```
 
-```{r make-read-in-data-function}
+``` r
 # Output format from BLAST is as detailed on:
 # https://www.ncbi.nlm.nih.gov/books/NBK279675/
 # In this case, we used: '10 sscinames std'
@@ -79,7 +82,7 @@ read_blast_output <- function(filename) {
 }
 ```
 
-```{r read-in-BLAST-data}
+``` r
 # this makes a vector of all the BLAST output file names, including
 # the name(s) of the directories they are in
 files_to_read_in <- list.files(path = "output/blast",
@@ -100,7 +103,7 @@ for (filename in files_to_read_in) {
 }
 ```
 
-```{r read-in-metadata-and-join}
+``` r
 # Next we want to read in the metadata file so we can add that in too
 # This is not a csv file, so we have to use a slightly different syntax
 # here the `sep = "\t"` tells the function that the data are tab-delimited
@@ -121,95 +124,25 @@ joined_blast_data_metadata <- metadata_in %>%
             by = c("Run_s" = "sample_name"))
 ```
 
-```{r}
-#Different bacterial taxa on male vs female hands
-joined_blast_data_metadata %>%
-  group_by(sscinames, sex_s) %>%
-  tally() %>%
-  arrange(desc(n)) %>%
-  filter(sex_s != "Not applicable") %>%
-  filter(n > 100) %>%
-  ggplot(aes(sscinames, y = n, fill = sex_s)) +
-  geom_col() +
-  theme(axis.text = element_text(angle = 90,
-                                 hjust = 1)) +
-  ggtitle("Number of most abundant taxa in male vs female hands")
-
-```
-
-
-
-
-```{r show-levels}
-levels(factor(joined_blast_data_metadata$anonymized_name_s))
-```
-
-
-```{r group-by-summarize}
-#group by anonymized name and calculate mean percent identity
-joined_blast_data_metadata %>%
-  group_by(anonymized_name_s) %>%
-  summarize(mean_pident = mean(pident),
-            sd_pident = sd(pident)) %>%
-  ggplot(aes(x = anonymized_name_s,
-             y = mean_pident)) +
-  geom_col(fill = "dodger blue") +
-  geom_errorbar(aes(ymax = mean_pident + sd_pident,
-                    ymin = mean_pident - sd_pident),
-                width = 0.3) +
-theme(axis.text.x = element_text(angle = 90,
-                                    hjust = 1))
-
-```
-
-
-```{r histograms}
+``` r
 # Here we're using the dplyr piping syntax to select a subset of rows matching a
 # criteria we specify (using the filter) function, and then pull out a column
 # from the data to make a histogram.
 joined_blast_data_metadata %>%
-  filter(env_material_s == "dust") %>%
-  filter(grepl("F2", host_subject_id_s)) %>%
+  filter(env_material_s == "sebum") %>%
   ggplot(aes(x = pident)) +
     geom_histogram() +
     ggtitle("Percent Identity") +
     xlab("Percent")
 ```
 
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-```{r counting-rows}
-joined_blast_data_metadata %>%
-  group_by(sscinames, env_material_s) %>%
-  tally() %>%
-  arrange(desc(n)) %>%
-  filter(n > 300) %>%
-  ggplot(aes(x = sscinames, 
-             y = n,
-             fill = env_material_s)) +
-  geom_col() +
-  theme(axis.text.x = element_text(angle = 90,
-                                   hjust =1))
-```
-
-
-
-```{r dplyr-example-1}
-# using select() to extract particular columns of data
-joined_blast_data_metadata %>%
-  select(Organism_s, AvgSpotLen_l)
-
-#use filter() to extract only certain rows that match a condition
-joined_blast_data_metadata %>%
-  filter(env_material_s == "dust")
- 
-
-
-```
-
+![](Analysis_of_BLAST_Results_files/figure-markdown_github/histograms-1.png)
 
 Don't forget to report what your figures show in words, here in the Results section.
 
-```{r summary-table}
+``` r
 # Finally, we'd like to be able to make a summary table of the counts of
 # sequences for each subject for both sample types. To do that we can use the
 # table() function. We add the kable() function as well (from the tidyr package)
@@ -218,7 +151,20 @@ kable(table(joined_blast_data_metadata$host_subject_id_s,
             joined_blast_data_metadata$sample_type_s))
 ```
 
-# Discussion
+|     |  computer mouse|  right palm|
+|-----|---------------:|-----------:|
+| F2  |             396|         410|
+| F5  |             365|         777|
+| F6  |             662|         422|
+| F7  |             655|         546|
+| F8  |             878|         374|
+| M1  |             456|         878|
+| M2  |             670|         775|
+| M7  |             970|         689|
+| M8  |             717|         280|
+| M9  |             571|         968|
+
+Discussion
+==========
 
 Add 2-3 paragraphs here interpreting your results and considering future directions one might take in analyzing these data.
-
