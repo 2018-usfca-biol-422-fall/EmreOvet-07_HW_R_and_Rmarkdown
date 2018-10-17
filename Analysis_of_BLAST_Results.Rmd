@@ -148,27 +148,23 @@ joined_blast_data_metadata %>%
   ggtitle("Number of most abundant taxa in male vs female hands")
 
 ```
-
-
-
+*Figure 1* In this figure, we can see the number of most abundant taxa in male and female hands which are higher than 100. There are only 7 bacteria out of hundreds that are widely common which is quite surprising, and only 2 of them are found in female palm surfaces; Acidovorax sp. and Bartonella washoensis. Overall, Solemya pervemicosa gill symbiont is the most abundant bacteria in males and Bartonella washoensis is the most abundant bacteria in females.
 ```{r}
-#Abundance of Acidovorax sp. in male vs female hands
+#Abundance of Bartonella washoensis in female hands
 
 joined_blast_data_metadata %>%
   group_by(sscinames, sex_s) %>%
   tally() %>%
   arrange(desc(n)) %>%
   filter(sex_s != "Not applicable") %>%
-  filter(n > 100) %>%
-  filter(sscinames == "Acidovorax sp.") %>%
+  filter(sscinames == "Bartonella washoensis") %>%
+  filter(sex_s == "female")%>%
   ggplot(aes(sscinames, y = n, fill = sex_s)) +
   geom_col() +
   theme(axis.text = element_text(angle = 90,
                                  hjust = 1)) +
-    ggtitle("Abundance of Acidovorax sp. in male vs female hands")
+    ggtitle("Abundance of Bartonella washoensis in female hands")
 ```
-
-
 
 
 
@@ -195,7 +191,7 @@ theme(axis.text.x = element_text(angle = 90,
                                     hjust = 1))
 
 ```
-
+*Figure 2* In this figure, we can see the mean percent identity for the query sequences. The mean percent identities are pretty high which suggest that they query sequences are similar to each other.
 
 ```{r histograms}
 # Here we're using the dplyr piping syntax to select a subset of rows matching a
@@ -209,7 +205,7 @@ joined_blast_data_metadata %>%
     ggtitle("Percent Identity") +
     xlab("Percent")
 ```
-
+*Figure 3* In this figure, we can see the percent identities of the query sequences with dust. As expected, most of them have high percent identities which suggest that they are pretty similar to each other. There are sequences with dust that have percent identities less than %95 but they are negligible.
 
 ```{r counting-rows}
 joined_blast_data_metadata %>%
@@ -224,6 +220,7 @@ joined_blast_data_metadata %>%
   theme(axis.text.x = element_text(angle = 90,
                                    hjust =1))
 ```
+*Figure 4* In this figure, we can see the number of dust and sebum query sequences for bacteria which are higher than 300. The first thing we notice is that Solemya pervemicose symbiont and Bartonella washoensis, which are the most abundant bacteria in males and females respectively, also have the highest number query sequences with both dust and sebum sequences.
 
 
 
