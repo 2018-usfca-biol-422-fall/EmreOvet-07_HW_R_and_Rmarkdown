@@ -7,17 +7,29 @@ output: github_document
 
 # Introduction
 
-Add 1-2 paragraphs here.
+The human skin contains a large amount of bacteria on its surface due to its constact contact with air and different objects in daily life. Those bacterial communities are able to survive on skin surface for long periods of time because most of them are highly resistant to to environmental stress factors like temperature and UV, thus, skin surface is a favorable habitat for them. 
+
+According to the recent studies, it is found out that the diversity of bacterial communities on palm surface is much higher than what is previously assumed and that after washing hands, the  surviving bacteria are able to reproduce rapidly and recover their previous population. It is also found out that the genera of bacteria living on the palm surface largely varies between individuals.
+
+In the light of these information, we hypothesize that the specificity of the bacterial community genera can be used for forensic investigatigation by comparing the bacteria found on different objects with those found on the palm surfaces of individuals. In order to test our hypothesis, we conducted an experiment in which bacterial communities from keyboards and computer mouses were extracted along with those from the palm surfaces of individuals using those equipment, then the genera of the bacteria from keyboards and computer mouses were compared with those from skin surfaces using pyrosequencing. 
 
 # Methods
 
 ## Sample origin and sequencing
 
-Add about a paragraph here.
+For the keyboard analysis, keys from 3 personal computer keyboards were swabbed along with the fingertips of their owners. Then, space bar keys from 15 personal or public computer keyboards located in University of Colorado Campus were swabbed. In order to sample skin surfaces and keyboards, pre- moistured and autoclaved cotton-tipped swabs were used.
+
+For the storage analysis, right axillary skin surface of 2 adults were sampled by 16 moistened swabs per individual. Half of these swabs were frozen at -20°C and the other half left in uncapped 15 ml conical tubes on the laboratory bench that is in indoor conditions at ~20°C and fluorescent lighting applied to samples ~8 hours per day. Finally, bacterial DNA was extracted from the samples which were kept at ~ -80°C.
+
+For the computer mouse analysis, the palm surfaces of 4 men and 4 women from University of Colorado campus were swabbed along with the computer mouses of each individual's personal computer which were last touched by their owners 12 hours before the swabbing. All swabs were stored in -80°C until the DNA extraction. Then, the database of bacterial communities from both the right and left hand palm surfaces of 270 other individuals were compiled, sampled and analyzed.
+
+For the pyrosequencing, DNA was extracted from samples by using MO BIO Powersoil DNA isolation kit. Amplicons were cleaned using the UltraClean-htp 96-well PCR Clean-up kit and the DNA concentration inside the amplicon were measured using the Quant-iT PicoGreen dsDNA reagent and kit. 
 
 ## Computational
 
-And another paragraph or two here.
+On a tmux session, QC reports were created using the data from NCBI using FastQC program. Then, we used the Cyberduck program to transfer the files from tmux to our computer. After then, we trimed the sequences by looking at their quality scores, that is, any sequence below 150 base pairs were filtered. Furthermore, we  Blasted the sequences to obtain the top match of each sequence.Finally, we used dplyr functions to visualize our data on Rstudio by making plots.
+
+
 
 # Results
 
@@ -136,6 +148,28 @@ joined_blast_data_metadata %>%
   ggtitle("Number of most abundant taxa in male vs female hands")
 
 ```
+
+
+
+```{r}
+#Abundance of Acidovorax sp. in male vs female hands
+
+joined_blast_data_metadata %>%
+  group_by(sscinames, sex_s) %>%
+  tally() %>%
+  arrange(desc(n)) %>%
+  filter(sex_s != "Not applicable") %>%
+  filter(n > 100) %>%
+  filter(sscinames == "Acidovorax sp.") %>%
+  ggplot(aes(sscinames, y = n, fill = sex_s)) +
+  geom_col() +
+  theme(axis.text = element_text(angle = 90,
+                                 hjust = 1)) +
+    ggtitle("Abundance of Acidovorax sp. in male vs female hands")
+```
+
+
+
 
 
 
