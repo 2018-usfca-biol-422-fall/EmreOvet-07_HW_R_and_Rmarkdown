@@ -153,22 +153,8 @@ joined_blast_data_metadata %>%
 
 *Figure 1* 
 In this figure, we can see the number of most abundant taxa in male and female hands which are higher than 100. There are only 7 bacteria out of hundreds that are widely common which is quite surprising, and only 2 of them are found in female palm surfaces; Acidovorax sp. and Bartonella washoensis. Overall, Solemya pervemicosa gill symbiont is the most abundant bacteria in males and Bartonella washoensis is the most abundant bacteria in females.
-```{r}
-#Abundance of Bartonella washoensis in female hands
 
-joined_blast_data_metadata %>%
-  group_by(sscinames, sex_s) %>%
-  tally() %>%
-  arrange(desc(n)) %>%
-  filter(sex_s != "Not applicable") %>%
-  filter(sscinames == "Bartonella washoensis") %>%
-  filter(sex_s == "female")%>%
-  ggplot(aes(sscinames, y = n, fill = sex_s)) +
-  geom_col() +
-  theme(axis.text = element_text(angle = 90,
-                                 hjust = 1)) +
-    ggtitle("Abundance of Bartonella washoensis in female hands")
-```
+
 
 
 
@@ -239,22 +225,6 @@ joined_blast_data_metadata %>%
 In this figure, we can see the number of dust and sebum query sequences for bacteria which are higher than 300. The first thing we notice is that Solemya pervemicose symbiont and Bartonella washoensis, which are the most abundant bacteria in males and females respectively, also have the highest number query sequences with both dust and sebum sequences.
 
 
-
-```{r dplyr-example-1}
-# using select() to extract particular columns of data
-joined_blast_data_metadata %>%
-  select(Organism_s, AvgSpotLen_l)
-
-#use filter() to extract only certain rows that match a condition
-joined_blast_data_metadata %>%
-  filter(env_material_s == "dust")
- 
-
-
-```
-
-
-Don't forget to report what your figures show in words, here in the Results section.
 
 ```{r summary-table}
 # Finally, we'd like to be able to make a summary table of the counts of
