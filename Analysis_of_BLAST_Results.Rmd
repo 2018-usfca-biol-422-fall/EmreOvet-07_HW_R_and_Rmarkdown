@@ -211,12 +211,12 @@ joined_blast_data_metadata %>%
   tally() %>%
   arrange(desc(n)) %>%
   filter(n > 300) %>%
-  ggplot(aes(x = sscinames, 
+  ggplot(aes(x = sscinames,
              y = n,
              fill = env_material_s)) +
   geom_col() +
   theme(axis.text.x = element_text(angle = 90,
-                                   hjust =1))
+                                   hjust = 1))
 ```
 
 
