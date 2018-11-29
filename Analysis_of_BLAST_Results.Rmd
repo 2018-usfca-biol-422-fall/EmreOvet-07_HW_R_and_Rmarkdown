@@ -7,21 +7,16 @@ output: github_document
 
 # Introduction
 
-The human skin contains a large amount of bacteria on its surface due to its constact contact with air and different objects in daily life. Those bacterial communities are able to survive on skin surface for long periods of time because most of them are highly resistant to to environmental stress factors like temperature and UV, thus, skin surface is a favorable habitat for them. 
+The human skin contains a large amount of bacteria on its surface due to its constant contact with air and different objects in daily life. Those bacterial communities are able to survive on skin surface for long periods of time because most of them are highly resistant to environmental stress factors like temperature and UV, thus, skin surface is a favorable habitat for them. 
 
 According to the recent studies, it is found out that the diversity of bacterial communities on palm surface is much higher than what is previously assumed and that after washing hands, the  surviving bacteria are able to reproduce rapidly and recover their previous population. It is also found out that the genera of bacteria living on the palm surface largely varies between individuals.
 
-In the light of these information, we hypothesize that the specificity of the bacterial community genera can be used for forensic investigation by comparing the bacteria found on different objects with those found on the palm surfaces of individuals. In order to test our hypothesis, we conducted an experiment in which bacterial communities from keyboards and computer mouses were extracted along with those from the palm surfaces of individuals using those equipment, then the genera of the bacteria from keyboards and computer mouses were compared with those from skin surfaces using pyrosequencing. 
-
+In the light of these information, we hypothesize that the specificity of the bacterial community genera in male and female palm surfaces can be used for forensic investigation in terms of gender identification by comparing the bacteria found on different objects with those found on the palm surfaces of individuals. In order to test our hypothesis, we made several plots using the study of Fierer et al. in which bacterial communities from keyboards and computer mouses were extracted along with those from the palm surfaces of individuals using those equipment, then the genera of the bacteria from keyboards and computer mouses were compared with those from skin surfaces using pyrosequencing. The first figure will demonstrate the most abundant taxa in male vs female hands to see the level of similaries and differences between bacterial community genera in male and female palm surfaces, the second and figures will demonstrate 
 # Methods
 
 ## Sample origin and sequencing
 
-For the keyboard analysis, keys from 3 personal computer keyboards were swabbed along with the fingertips of their owners. Then, space bar keys from 15 personal or public computer keyboards located in University of Colorado Campus were swabbed. In order to sample skin surfaces and keyboards, pre- moistured and autoclaved cotton-tipped swabs were used.
-
-For the storage analysis, right axillary skin surface of 2 adults were sampled by 16 moistened swabs per individual. Half of these swabs were frozen at -20°C and the other half left in uncapped 15 ml conical tubes on the laboratory bench that is in indoor conditions at ~20°C and fluorescent lighting applied to samples ~8 hours per day. Finally, bacterial DNA was extracted from the samples which were kept at ~ -80°C.
-
-For the computer mouse analysis, the palm surfaces of 4 men and 4 women from University of Colorado campus were swabbed along with the computer mouses of each individual's personal computer which were last touched by their owners 12 hours before the swabbing. All swabs were stored in -80°C until the DNA extraction. Then, the database of bacterial communities from both the right and left hand palm surfaces of 270 other individuals were compiled, sampled and analyzed.
+For the computer mouse analysis, the palm surfaces of 5 men and 4 women from University of Colorado campus were swabbed along with the computer mouses of each individual's personal computer which were last touched by their owners 12 hours before the swabbing. All swabs were stored in -80°C until the DNA extraction. Then, the database of bacterial communities from both the right and left hand palm surfaces of 270 other individuals were compiled, sampled and analyzed.
 
 For the pyrosequencing, DNA was extracted from samples by using MO BIO Powersoil DNA isolation kit. Amplicons were cleaned using the UltraClean-htp 96-well PCR Clean-up kit and the DNA concentration inside the amplicon were measured using the Quant-iT PicoGreen dsDNA reagent and kit. 
 
@@ -133,8 +128,7 @@ joined_blast_data_metadata <- metadata_in %>%
             by = c("Run_s" = "sample_name"))
 ```
 
-```{r}
-#Different bacterial taxa on male vs female hands
+```{r Different bacterial taxa on male vs female hands}
 joined_blast_data_metadata %>%
   group_by(sscinames, sex_s) %>%
   tally() %>%
@@ -146,18 +140,52 @@ joined_blast_data_metadata %>%
   theme(axis.text = element_text(angle = 90,
                                  hjust = 1)) +
   ggtitle("Number of most abundant taxa in male vs female hands")
-
 ```
 
-
-
 *Figure 1* 
-In this figure, we can see the number of most abundant taxa in male and female hands which are higher than 100. There are only 7 bacteria out of hundreds that are widely common which is quite surprising, and only 2 of them are found in female palm surfaces; Acidovorax sp. and Bartonella washoensis. Overall, Solemya pervemicosa gill symbiont is the most abundant bacteria in males and Bartonella washoensis is the most abundant bacteria in females.
+In this figure, we can see that the number of most abundant taxa in male and female hands which are higher than 100. There are only 7 bacteria out of hundreds that are widely common, and only 2 of them are found in female palm surfaces; Acidovorax sp. and Bartonella washoensis. Overall, Solemya pervemicosa gill symbiont is the most abundant bacteria in males and Bartonella washoensis is the most abundant bacteria in females.
 
+```{r Abundance of Bartonella washoensis in dust vs sebum}
+joined_blast_data_metadata %>%
+  group_by(sscinames, env_material_s) %>%
+  tally() %>%
+  filter(sscinames %in% c("Bartonella washoensis")) %>%
+  ggplot(aes(sscinames, y = n, fill = env_material_s)) +
+  geom_col(position = position_dodge()) +
+    theme(axis.text = element_text(angle = 90, hjust = 1)) +
+  ggtitle("Abundance of Bartonella washoensis in male vs female hands")
+```
 
+*figure 2*
+In this figure, we can see that the abundance of Bartonella washoensis is between 750 and 900 in dust and between 500 and 750 in sebum. 
 
+```{r Abundance of Solemya pervernicosa gill symbiont in dust vs sebum}
+joined_blast_data_metadata %>%
+  group_by(sscinames, env_material_s) %>%
+  tally() %>%
+  filter(sscinames %in% c("Solemya pervernicosa gill symbiont")) %>%
+  ggplot(aes(sscinames, y = n, fill = env_material_s)) +
+  geom_col(position = position_dodge()) +
+    theme(axis.text = element_text(angle = 90, hjust = 1)) +
+  ggtitle("Abundance of Solemya pervernicosa gill symbiont in dust vs sebum")
+```
 
+*figure 3*
+In this figure, we can see that the abundance of Solemya pervernicosa gill symbiont is between 750 and 1000 in dust and between 1500 and 1750 in sebum. 
 
+```{r Abundance of Acidovorax sp. in dust vs sebum}
+joined_blast_data_metadata %>%
+  group_by(sscinames, env_material_s) %>%
+  tally() %>%
+  filter(sscinames %in% c("Acidovorax sp.")) %>%
+  ggplot(aes(sscinames, y = n, fill = env_material_s)) +
+  geom_col(position = position_dodge()) +
+    theme(axis.text = element_text(angle = 90, hjust = 1)) +
+  ggtitle("Abundance of Acidovorax sp. in dust vs sebum")
+```
+
+*figure 4*
+In this figure, we can see that the abundance of Acidovorax sp. is between 750 and 1000 in dust and between 1500 and 1750 in sebum. 
 
 
 ```{r show-levels}
@@ -165,8 +193,7 @@ levels(factor(joined_blast_data_metadata$anonymized_name_s))
 ```
 
 
-```{r group-by-summarize}
-#group by anonymized name and calculate mean percent identity
+```{r Mean percent identity of query sequences}
 joined_blast_data_metadata %>%
   group_by(anonymized_name_s) %>%
   summarize(mean_pident = mean(pident),
@@ -183,10 +210,6 @@ theme(axis.text.x = element_text(angle = 90,
 ```
 
 
-
-*Figure 2* 
-In this figure, we can see the mean percent identity for the query sequences. The mean percent identities are pretty high which suggest that they query sequences are similar to each other.
-
 ```{r histograms}
 # Here we're using the dplyr piping syntax to select a subset of rows matching a
 # criteria we specify (using the filter) function, and then pull out a column
@@ -199,31 +222,6 @@ joined_blast_data_metadata %>%
     ggtitle("Percent Identity") +
     xlab("Percent")
 ```
-
-
-
-*Figure 3* 
-In this figure, we can see the percent identities of the query sequences with dust. As expected, most of them have high percent identities which suggest that they are pretty similar to each other. There are sequences with dust that have percent identities less than %95 but they are negligible.
-
-```{r counting-rows}
-joined_blast_data_metadata %>%
-  group_by(sscinames, env_material_s) %>%
-  tally() %>%
-  arrange(desc(n)) %>%
-  filter(n > 300) %>%
-  ggplot(aes(x = sscinames,
-             y = n,
-             fill = env_material_s)) +
-  geom_col() +
-  theme(axis.text.x = element_text(angle = 90,
-                                   hjust = 1))
-```
-
-
-
-*Figure 4* 
-In this figure, we can see the number of dust and sebum query sequences for bacteria which are higher than 300. The first thing we notice is that Solemya pervemicose symbiont and Bartonella washoensis, which are the most abundant bacteria in males and females respectively, also have the highest number query sequences with both dust and sebum sequences.
-
 
 
 ```{r summary-table}
